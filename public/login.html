@@ -1,0 +1,24 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>🔐 Crown Streamer</title>
+    <style>
+        body { background: #0b0b1a; display: flex; justify-content: center; align-items: center; height: 100vh; font-family: Arial; margin:0; }
+        .box { background: #1a1a2e; padding: 40px; border-radius: 12px; box-shadow: 0 0 20px #e94560; text-align: center; }
+        h1 { color: #e94560; }
+        input { padding: 12px; width: 200px; border: none; border-radius: 6px; }
+        button { padding: 12px 30px; background: #e94560; color: white; border: none; border-radius: 6px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h1>👑 Crown Streamer</h1>
+        <p style="color:white;">Enter password to enter</p>
+        <form method="POST" action="/login">
+            <input type="password" name="password" placeholder="Password..." required>
+            <br><br>
+            <button type="submit">Unlock</button>
+        </form>
+    </div>
+</body>
+</html>

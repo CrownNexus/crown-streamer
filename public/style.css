@@ -1,0 +1,11 @@
+﻿* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #0b0b1a; color: white; font-family: Arial, sans-serif; }
+nav { background: #1a1a2e; padding: 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #e94560; }
+nav h1 { color: #e94560; }
+.container { max-width: 1000px; margin: 30px auto; padding: 0 20px; }
+#searchInput { width: 100%; padding: 15px; font-size: 18px; border-radius: 8px; border: none; background: #2a2a4a; color: white; }
+#results { margin-top: 20px; display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; }
+#results div { background: #1a1a2e; padding: 10px; border-radius: 8px; cursor: pointer; text-align: center; transition: 0.3s; }
+#results div:hover { background: #e94560; transform: scale(1.03); }
+#results img { width: 100%; border-radius: 6px; }
+#playerContainer { margin-top: 30px; display: flex; justify-content: center; }

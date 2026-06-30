@@ -1,0 +1,22 @@
+{
+  "name": "crown-streamer",
+  "version": "1.0.0",
+  "description": "Password-protected anime streaming site",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "build": "webpack"
+  },
+  "dependencies": {
+    "@consumet/extensions": "^1.8.8",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "express-rate-limit": "^6.7.0",
+    "express-session": "^1.17.3"
+  },
+  "devDependencies": {
+    "terser-webpack-plugin": "^5.3.9",
+    "webpack": "^5.88.2",
+    "webpack-cli": "^5.1.4"
+  }
+}
