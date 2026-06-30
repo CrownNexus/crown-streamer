@@ -1,21 +1,175 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <title>Crown Streamer</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Crown Streamer</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-    <nav>
-        <h1>👑 Crown Streamer</h1>
-        <a href="/logout" style="color:white;">Logout</a>
-    </nav>
-    <div class="container">
-        <input type="text" id="searchInput" placeholder="Search anime..." autocomplete="off">
-        <div id="results"></div>
-        <div id="playerContainer">
-            <video id="videoPlayer" controls width="100%" style="max-width:900px; display:none;"></video>
-        </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="logo">C</div>
+      <div class="brand-text">
+        <h1>Crown</h1>
+        <div class="sub">Streamer</div>
+      </div>
     </div>
-    <script src="script.js"></script>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section">
+        <span class="nav-label">Main</span>
+        <a href="#" onclick="loadHome()" class="active" id="nav-home">
+          <span class="icon">⌂</span>
+          <span class="label">Home</span>
+        </a>
+        <a href="#" onclick="loadBrowse()" id="nav-browse">
+          <span class="icon">⊞</span>
+          <span class="label">Browse</span>
+        </a>
+        <a href="#" onclick="loadDiscover()" id="nav-discover">
+          <span class="icon">✦</span>
+          <span class="label">Discover</span>
+        </a>
+        <a href="#" onclick="loadRandom()" id="nav-random">
+          <span class="icon">◈</span>
+          <span class="label">Random</span>
+        </a>
+        <a href="#" onclick="loadLatest()" id="nav-latest">
+          <span class="icon">◉</span>
+          <span class="label">Latest Episodes</span>
+        </a>
+        <a href="#" onclick="loadSchedule()" id="nav-schedule">
+          <span class="icon">☰</span>
+          <span class="label">Schedule</span>
+        </a>
+      </div>
+
+      <div class="nav-section">
+        <span class="nav-label">Personal</span>
+        <a href="#" onclick="loadProfile()" id="nav-profile">
+          <span class="icon">◔</span>
+          <span class="label">Profile</span>
+        </a>
+        <a href="#" onclick="loadWatchHistory()" id="nav-history">
+          <span class="icon">▸</span>
+          <span class="label">Watch History</span>
+        </a>
+        <a href="#" onclick="loadRequests()" id="nav-requests">
+          <span class="icon">✎</span>
+          <span class="label">Request Series</span>
+        </a>
+      </div>
+
+      <div class="nav-section">
+        <span class="nav-label">Legal</span>
+        <a href="#" onclick="loadFAQ()" id="nav-faq">
+          <span class="icon">?</span>
+          <span class="label">FAQ</span>
+        </a>
+        <a href="#" onclick="loadTerms()" id="nav-terms">
+          <span class="icon">⚖</span>
+          <span class="label">Terms of Service</span>
+        </a>
+        <a href="/logout" id="nav-logout">
+          <span class="icon">↗</span>
+          <span class="label">Logout</span>
+        </a>
+      </div>
+    </nav>
+  </aside>
+
+  <main class="main-content">
+
+    <section id="heroSection" class="hero">
+      <div class="hero-top">
+        <div>
+          <h1>Watch Anime. <span class="highlight">Free. Forever.</span></h1>
+          <div class="hero-sub">Stream thousands of episodes in HD. No ads. Just anime.</div>
+        </div>
+        <div class="hero-actions">
+          <button class="watch-btn" onclick="document.getElementById('searchInput').focus()">Start Watching</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- FEATURED -->
+    <div id="featuredContainer" class="featured-anime">
+      <div class="poster">
+        <img id="featuredPoster" src="https://via.placeholder.com/280x420?text=Loading..." alt="Featured" />
+      </div>
+      <div class="info">
+        <div class="title" id="featuredTitle">Loading...</div>
+        <div class="year" id="featuredYear">...</div>
+        <div class="genres" id="featuredGenres"></div>
+        <p class="synopsis" id="featuredSynopsis">Loading featured anime...</p>
+        <button class="watch-btn" onclick="playFeatured()">▶ Watch Now</button>
+      </div>
+    </div>
+
+    <!-- SEARCH -->
+    <div class="search-wrapper">
+      <input type="text" id="searchInput" placeholder="Search for your favorite anime..." autocomplete="off" />
+    </div>
+    <div id="searchResults" class="anime-grid"></div>
+
+    <!-- CONTINUE WATCHING -->
+    <div class="section-header">
+      <h2>Continue Watching</h2>
+      <span class="count" id="continueCount">0 items</span>
+    </div>
+    <div id="continueGrid" class="continue-grid"></div>
+
+    <!-- TRENDING -->
+    <div class="section-header">
+      <h2>Trending Now</h2>
+      <a href="#" class="view-all" onclick="loadTrending()">View All</a>
+    </div>
+    <div id="trendingGrid" class="anime-grid"></div>
+
+    <!-- POPULAR -->
+    <div class="section-header">
+      <h2>Most Popular</h2>
+      <a href="#" class="view-all" onclick="loadPopular()">View All</a>
+    </div>
+    <div id="popularGrid" class="anime-grid"></div>
+
+    <!-- RECENT -->
+    <div class="section-header">
+      <h2>Recent Episodes</h2>
+      <a href="#" class="view-all" onclick="loadRecent()">View All</a>
+    </div>
+    <div id="recentGrid" class="anime-grid"></div>
+
+    <!-- REQUEST -->
+    <section id="requestSection" class="request-section" style="display:none;">
+      <div class="section-header"><h2>Request a Series</h2></div>
+      <div class="request-form">
+        <input type="text" id="requestTitle" placeholder="Enter anime name..." />
+        <input type="text" id="requestReason" placeholder="Why do you want this? (optional)" />
+        <button onclick="submitRequest()">Submit</button>
+      </div>
+      <div id="requestList" class="request-list"></div>
+    </section>
+
+    <!-- DETAIL -->
+    <div id="detailView" class="detail-view" style="display:none;">
+      <button onclick="closeDetail()" class="back-btn">← Back</button>
+      <div id="detailContent"></div>
+    </div>
+
+    <!-- PLAYER -->
+    <div id="playerContainer">
+      <video id="videoPlayer" controls width="100%" style="display:none;"></video>
+      <div id="episodeSelector" style="display:none;" class="episode-selector">
+        <h3>Select Episode</h3>
+        <div id="episodeList" class="episode-list"></div>
+      </div>
+    </div>
+
+  </main>
+
+  <script src="script.js"></script>
 </body>
 </html>

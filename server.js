@@ -8,17 +8,18 @@ const { ANIME } = require("@consumet/extensions");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+const seriesRequests = [];
+
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static("public"));
 
-// FIX: Session expires after 24 hours to fix "auto login" confusion
 app.use(
   session({
     secret: "super-secret-crown-key",
     resave: false,
     saveUninitialized: true,
-    cookie: { maxAge: 24 * 60 * 60 * 1000, secure: false, httpOnly: true },
+    cookie: { maxAge: 24 * 60 * 60 * 1000 },
   })
 );
 
@@ -30,7 +31,6 @@ function isAuthenticated(req, res, next) {
   res.redirect("/login");
 }
 
-// ROUTES
 app.get("/login", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "login.html"));
 });
@@ -53,7 +53,6 @@ app.get("/", isAuthenticated, (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
-// --- NEW: TRENDING ANIME ---
 app.get("/api/trending", isAuthenticated, async (req, res) => {
   try {
     const gogo = new ANIME.Gogoanime();
@@ -64,7 +63,6 @@ app.get("/api/trending", isAuthenticated, async (req, res) => {
   }
 });
 
-// --- NEW: POPULAR ANIME ---
 app.get("/api/popular", isAuthenticated, async (req, res) => {
   try {
     const gogo = new ANIME.Gogoanime();
@@ -75,7 +73,6 @@ app.get("/api/popular", isAuthenticated, async (req, res) => {
   }
 });
 
-// --- NEW: RECENT EPISODES ---
 app.get("/api/recent", isAuthenticated, async (req, res) => {
   try {
     const gogo = new ANIME.Gogoanime();
@@ -86,7 +83,6 @@ app.get("/api/recent", isAuthenticated, async (req, res) => {
   }
 });
 
-// --- SEARCH (Already existing) ---
 app.get("/api/search", isAuthenticated, async (req, res) => {
   try {
     const query = req.query.q;
@@ -99,7 +95,26 @@ app.get("/api/search", isAuthenticated, async (req, res) => {
   }
 });
 
-// --- STREAM (Already existing) ---
+app.get("/api/anime/:id", isAuthenticated, async (req, res) => {
+  try {
+    const gogo = new ANIME.Gogoanime();
+    const info = await gogo.fetchAnimeInfo(req.params.id);
+    res.json(info);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.get("/api/episodes/:id", isAuthenticated, async (req, res) => {
+  try {
+    const gogo = new ANIME.Gogoanime();
+    const info = await gogo.fetchAnimeInfo(req.params.id);
+    res.json(info.episodes || []);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 app.get("/api/stream", isAuthenticated, async (req, res) => {
   try {
     const episodeId = req.query.id;
@@ -110,6 +125,17 @@ app.get("/api/stream", isAuthenticated, async (req, res) => {
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
+});
+
+app.post("/api/request", isAuthenticated, (req, res) => {
+  const { title, reason } = req.body;
+  if (!title) return res.status(400).json({ error: "Title required" });
+  seriesRequests.push({ title, reason, requestedAt: new Date() });
+  res.json({ success: true, total: seriesRequests.length });
+});
+
+app.get("/api/requests", isAuthenticated, (req, res) => {
+  res.json(seriesRequests);
 });
 
 app.listen(PORT, () =>
